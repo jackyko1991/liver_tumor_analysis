@@ -5,7 +5,7 @@ def main():
 	executable = "D:/projects/liver_tumor/binary/ExpertAutomatedRegistration.exe"
 	working_dir = "./data/by_case"
 
-	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing"]
+	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing","ChuKitPing"]
 
 	for patient in os.listdir(working_dir):
 		if patient in ignore:
