@@ -7,14 +7,20 @@ def main():
 	src_dir = "./data/by_case"
 	tgt_filename = "temporal_mIP.nii.gz"
 
-	pbar = tqdm(os.listdir(src_dir))
+	pbar = tqdm(os.listdir(src_dir)[16:])
 	stages = ["pre","post"]
 	phases = ["HA","PV"]
 
-	for case in pbar:
+	cases = ["WongKeung"]
+
+	# for case in pbar:
+	for case in cases:
 		pbar.set_description(case)
 		for stage in stages:
 			for phase in phases:
+				if not os.path.exists(os.path.join(src_dir,case,stage,"nii_reg",phase)):
+					continue
+
 				images = []
 				images_np = []
 				for time in range(1,11):

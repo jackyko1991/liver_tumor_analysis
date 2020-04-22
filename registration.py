@@ -2,7 +2,7 @@ import os
 import shutil
 
 def main():
-	executable = "D:/projects/liver_tumor/binary/ExpertAutomatedRegistration.exe"
+	executable = "F:/liver_tumor/binary/ExpertAutomatedRegistration.exe"
 	working_dir = "./data/by_case"
 
 	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing","ChuKitPing"]

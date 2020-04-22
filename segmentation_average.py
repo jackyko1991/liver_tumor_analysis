@@ -8,7 +8,7 @@ def main():
 	stages = ["pre","post"]
 	phases = ["HA","PV"]
 
-	for case in os.listdir(data_dir):
+	for case in os.listdir(data_dir)[5:]:
 		print(case)
 		images = []
 		images_np = []
@@ -26,6 +26,9 @@ def main():
 				castFilter = sitk.CastImageFilter()
 				castFilter.SetOutputPixelType(sitk.sitkUInt8)
 				images.append(castFilter.Execute(reader.Execute()))
+
+		for image in images:
+			image.SetOrigin(images[0].GetOrigin())
 
 		votingFilter = sitk.LabelVotingImageFilter()
 		votingFilter.SetLabelForUndecidedPixels(0)
