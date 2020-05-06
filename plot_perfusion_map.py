@@ -41,6 +41,11 @@ def plot(src_dir,tgt_dir,subtract=False):
 	intensityWindowingFilter.SetWindowMaximum(300);
 	intensityWindowingFilter.SetWindowMinimum(0);
 	image = intensityWindowingFilter.Execute(image)
+
+	intensityWindowingFilter.SetOutputMaximum(255)
+	intensityWindowingFilter.SetOutputMinimum(0)
+	intensityWindowingFilter.SetWindowMaximum(512);
+	intensityWindowingFilter.SetWindowMinimum(0);
 	image_0 = intensityWindowingFilter.Execute(image_0)
 	image_1 = intensityWindowingFilter.Execute(image_1)
 	image_2 = intensityWindowingFilter.Execute(image_2)
@@ -49,6 +54,7 @@ def plot(src_dir,tgt_dir,subtract=False):
 		# if not i == 8:
 		# 	continue
 		image_slice = sitk.GetArrayFromImage(image)[i,:,:]
+		mask_slice = sitk.GetArrayFromImage(label)[i,:,:]
 		image_slice_0 = sitk.GetArrayFromImage(image_0)[i,:,:]
 		image_slice_1 = sitk.GetArrayFromImage(image_1)[i,:,:]
 		image_slice_2 = sitk.GetArrayFromImage(image_2)[i,:,:]
@@ -72,40 +78,60 @@ def plot(src_dir,tgt_dir,subtract=False):
 		ax.set_axis_off()
 		fig.add_axes(ax)
 		ax.imshow(image_slice,cmap="gray",origin='lower')
-		ax.imshow(image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)		
+		if np.max(image_slice_0) > 1:
+			ax0 = ax.imshow(image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
 
 		ax = plt.Axes(fig,[0.5,0,0.25,1])
 		ax.set_axis_off()
 		fig.add_axes(ax)
 		ax.imshow(image_slice,cmap="gray",origin='lower')
 		if subtract:
-			ax.imshow(image_slice_1-image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)		
+			if np.max(image_slice_1-image_slice_0) > 1:
+				ax1 = ax.imshow(image_slice_1-image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)		
 		else:
-			ax.imshow(image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+			if np.max(image_slice_1) > 1:
+				ax1 = ax.imshow(image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
 
 		ax = plt.Axes(fig,[0.75,0,0.25,1])
 		ax.set_axis_off()
 		fig.add_axes(ax)
 		ax.imshow(image_slice,cmap="gray",origin='lower')
 		if subtract:
-			ax.imshow(image_slice_2-image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+			if np.max(image_slice_2-image_slice_1) > 1:
+				ax2 = ax.imshow(image_slice_2-image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
 		else:
-			ax.imshow(image_slice_2,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+			if np.max(image_slice_2) > 1:
+				ax2 = ax.imshow(image_slice_2,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+
+
+		if np.sum(mask_slice) > 0:
+			cax = fig.add_axes([0.27, 0.1, 0.5, 0.025])
+
+			cb = fig.colorbar(ax0, ticks=[1, 63, 127, 191, 255],cax=cax, orientation='horizontal')
+			cb.set_label('HU value', color='white')
+			cb.ax.xaxis.set_tick_params(color='white')
+			cb.outline.set_edgecolor('white')
+			plt.setp(plt.getp(cb.ax.axes, 'xticklabels'), color='white')
+
+			xtickvalues = [str(i*512/4) for i in range(5)]
+			cb.ax.set_xticklabels(xtickvalues)
 
 		# plt.show()
 
 		if not os.path.exists(tgt_dir):
 			os.makedirs(tgt_dir)
 		fig.savefig(os.path.join(tgt_dir,str(i+1) + ".jpg"),dpi=dpi)
-
 		plt.close(fig)
 
 def main():
 	data_dir = "./data/by_case"
 
 	stages = ["pre","post"]
+	# cases = ["YauWaiBor"]
 
 	for case in os.listdir(data_dir):
+		# if not case in cases:
+		# 	continue
 		for stage in stages:
 			if stage == "pre":
 				src_dir = os.path.join(data_dir,case, stage, "nii_reg","HA")
@@ -124,6 +150,7 @@ def main():
 				tgt_dir = os.path.join(data_dir,case,"plot","perfusion_post_subtract")
 
 			plot(src_dir,tgt_dir,subtract=True)
+		# exit()
 
 if __name__ == "__main__":
 	main()
