@@ -12,6 +12,15 @@ def plot(src_dir,tgt_dir,subtract=False):
 	if not os.path.exists(src_dir):
 		return
 
+	if not (
+		os.path.exists(os.path.join(src_dir,"mIP.nii.gz")) and 
+		os.path.exists(os.path.join(src_dir,"mIP_tumor.nii.gz")) and 
+		os.path.exists(os.path.join(src_dir,"mIP_temporal_mIP_1-3.nii.gz")) and
+		os.path.exists(os.path.join(src_dir,"mIP_temporal_mIP_4-7.nii.gz")) and 
+		os.path.exists(os.path.join(src_dir,"mIP_temporal_mIP_8-10.nii.gz"))
+		):
+		return
+
 	reader = sitk.ImageFileReader()
 	reader.SetFileName(os.path.join(src_dir,"mIP.nii.gz"))
 	image = reader.Execute()
