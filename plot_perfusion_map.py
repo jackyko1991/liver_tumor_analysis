@@ -123,14 +123,21 @@ def plot(src_dir,tgt_dir,subtract=False):
 		if np.sum(mask_slice) > 0:
 			cax = fig.add_axes([0.27, 0.1, 0.5, 0.025])
 
-			cb = fig.colorbar(ax0, ticks=[1, 63, 127, 191, 255],cax=cax, orientation='horizontal')
-			cb.set_label('HU value', color='white')
-			cb.ax.xaxis.set_tick_params(color='white')
-			cb.outline.set_edgecolor('white')
-			plt.setp(plt.getp(cb.ax.axes, 'xticklabels'), color='white')
+			if "ax0" in locals():
+				cb = fig.colorbar(ax0, ticks=[1, 63, 127, 191, 255],cax=cax, orientation='horizontal')
+			elif "ax1" in locals():
+				cb = fig.colorbar(ax1, ticks=[1, 63, 127, 191, 255],cax=cax, orientation='horizontal')
+			elif "ax2" in locals():
+				cb = fig.colorbar(ax2, ticks=[1, 63, 127, 191, 255],cax=cax, orientation='horizontal')
+			
+			if "cb" in locals():
+				cb.set_label('HU value', color='white')
+				cb.ax.xaxis.set_tick_params(color='white')
+				cb.outline.set_edgecolor('white')
+				plt.setp(plt.getp(cb.ax.axes, 'xticklabels'), color='white')
 
-			xtickvalues = [str(i*512/4) for i in range(5)]
-			cb.ax.set_xticklabels(xtickvalues)
+				xtickvalues = [str(i*512/4) for i in range(5)]
+				cb.ax.set_xticklabels(xtickvalues)
 
 		# plt.show()
 
