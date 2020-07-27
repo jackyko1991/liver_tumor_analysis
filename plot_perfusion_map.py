@@ -5,9 +5,10 @@ import matplotlib
 matplotlib.use('TKAgg')
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
 
 def plot(src_dir,tgt_dir,subtract=False):
-	print(src_dir)
+	print(src_dir, "subtract: {}".format(subtract))
 	if not os.path.exists(src_dir):
 		return
 
@@ -67,7 +68,8 @@ def plot(src_dir,tgt_dir,subtract=False):
 	image_1 = intensityWindowingFilter.Execute(image_1)
 	image_2 = intensityWindowingFilter.Execute(image_2)
 
-	for i in range(image.GetSize()[2]):
+	pbar = tqdm(range(image.GetSize()[2]))
+	for i in pbar:
 		# if not i == 8:
 		# 	continue
 		image_slice = sitk.GetArrayFromImage(image)[i,:,:]
