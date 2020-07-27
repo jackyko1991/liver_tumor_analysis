@@ -35,6 +35,23 @@ def plot(src_dir,tgt_dir,subtract=False):
 	image_1 = maskFilter.Execute(image_1,label)
 	image_2 = maskFilter.Execute(image_2,label)
 
+	binaryThresholdFilter = sitk.BinaryThresholdImageFilter()
+	binaryThresholdFilter.SetLowerThreshold(256)
+	binaryThresholdFilter.SetUpperThreshold(1024)
+	binaryThresholdFilter.SetInsideValue(1)
+
+	mask_0 = binaryThresholdFilter.Execute(image_0)
+	mask_1 = binaryThresholdFilter.Execute(image_1)
+	mask_2 = binaryThresholdFilter.Execute(image_2)
+	castFilter.SetOutputPixelType(sitk.sitkFloat32)
+	mask_0 = castFilter.Execute(mask_0)
+	mask_1 = castFilter.Execute(mask_1)
+	mask_2 = castFilter.Execute(mask_2)
+
+	image_0 = maskFilter.Execute(image_0,mask_0)
+	image_1 = maskFilter.Execute(image_1,mask_1)
+	image_2 = maskFilter.Execute(image_2,mask_2)
+
 	intensityWindowingFilter = sitk.IntensityWindowingImageFilter()
 	intensityWindowingFilter.SetOutputMaximum(255)
 	intensityWindowingFilter.SetOutputMinimum(0)
@@ -79,7 +96,7 @@ def plot(src_dir,tgt_dir,subtract=False):
 		fig.add_axes(ax)
 		ax.imshow(image_slice,cmap="gray",origin='lower')
 		if np.max(image_slice_0) > 1:
-			ax0 = ax.imshow(image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+			ax0 = ax.imshow(image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1, vmax=255)
 
 		ax = plt.Axes(fig,[0.5,0,0.25,1])
 		ax.set_axis_off()
@@ -87,10 +104,10 @@ def plot(src_dir,tgt_dir,subtract=False):
 		ax.imshow(image_slice,cmap="gray",origin='lower')
 		if subtract:
 			if np.max(image_slice_1-image_slice_0) > 1:
-				ax1 = ax.imshow(image_slice_1-image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)		
+				ax1 = ax.imshow(image_slice_1-image_slice_0,cmap=my_cmap,origin='lower',alpha=.9, vmin=1, vmax=255)		
 		else:
 			if np.max(image_slice_1) > 1:
-				ax1 = ax.imshow(image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+				ax1 = ax.imshow(image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1, vmax=255)
 
 		ax = plt.Axes(fig,[0.75,0,0.25,1])
 		ax.set_axis_off()
@@ -98,11 +115,10 @@ def plot(src_dir,tgt_dir,subtract=False):
 		ax.imshow(image_slice,cmap="gray",origin='lower')
 		if subtract:
 			if np.max(image_slice_2-image_slice_1) > 1:
-				ax2 = ax.imshow(image_slice_2-image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
+				ax2 = ax.imshow(image_slice_2-image_slice_1,cmap=my_cmap,origin='lower',alpha=.9, vmin=1, vmax=255)
 		else:
 			if np.max(image_slice_2) > 1:
-				ax2 = ax.imshow(image_slice_2,cmap=my_cmap,origin='lower',alpha=.9, vmin=1)
-
+				ax2 = ax.imshow(image_slice_2,cmap=my_cmap,origin='lower',alpha=.9, vmin=1, vmax=255)
 
 		if np.sum(mask_slice) > 0:
 			cax = fig.add_axes([0.27, 0.1, 0.5, 0.025])
@@ -124,7 +140,7 @@ def plot(src_dir,tgt_dir,subtract=False):
 		plt.close(fig)
 
 def main():
-	data_dir = "./data/by_case"
+	data_dir = "Z:/data/liver/by_case"
 
 	stages = ["pre","post"]
 	# cases = ["YauWaiBor"]
