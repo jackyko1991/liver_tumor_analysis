@@ -1,21 +1,27 @@
 import os
 import shutil
+from tqdm import tqdm
 
 def main():
-	executable = "F:/liver_tumor/binary/ExpertAutomatedRegistration.exe"
-	working_dir = "./data/by_case"
+	executable = "D:/projects/liver_tumor/binary/ExpertAutomatedRegistration.exe"
+	working_dir = "Z:/data/liver/by_case"
 
+	# cases = os.listdir(working_dir)
+	cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
 	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing","ChuKitPing"]
 
-	for patient in os.listdir(working_dir):
+	pbar = tqdm(cases)
+	for patient in pbar:
 		if patient in ignore:
 			continue
 
 		if os.path.isdir(os.path.join(working_dir, patient)):
-			print("Working on",patient)
+			pbar.set_description(patient)
+
 			for stage in os.listdir(os.path.join(working_dir, patient)):
 				for phase in os.listdir(os.path.join(working_dir, patient,stage, "nii_crop")):
-					print(stage, phase)
+					tqdm.write("{} {}".format(stage, phase))
+
 					# clear target directory
 					shutil.rmtree(os.path.join(working_dir,patient,stage,"nii_reg",phase),ignore_errors=True)
 					os.makedirs(os.path.join(working_dir,patient,stage,"nii_reg",phase),exist_ok=True)
