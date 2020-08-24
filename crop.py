@@ -1,18 +1,22 @@
 import os
 import SimpleITK as sitk
+from tqdm import tqdm
 
 def main():
-	working_dir = "./data/by_case"
+	working_dir = "Z:/data/liver/by_case"
 
 	reader = sitk.ImageFileReader()
+	# cases = os.listdir(working_dir)
+	cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
 	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing","ChuKitPing"]
 
-	for patient in os.listdir(working_dir):
+	pbar = tqdm(cases)
+	for patient in pbar:
 		if patient in ignore:
 			continue
 
 		if os.path.isdir(os.path.join(working_dir, patient)):
-			print("Working on",patient)
+			pbar.set_description(patient)
 			for stage in os.listdir(os.path.join(working_dir, patient)):
 				for phase in os.listdir(os.path.join(working_dir, patient,stage, "nii")):
 					# os.makedirs(os.path.join(working_dir,patient,stage,"nii_reg",phase),exist_ok=True)
@@ -29,7 +33,7 @@ def main():
 								reference = reader.Execute()
 
 						# crop plain image
-						print(stage,phase,"plain")
+						tqdm.write("Cropping: {} {} {}".format(stage,phase,"plain"))
 						plainFilename = os.listdir(os.path.join(working_dir,patient, stage, "nii", "plain"))[0]
 
 						reader.SetFileName(os.path.join(working_dir,patient, stage, "nii", "plain",plainFilename))
@@ -65,8 +69,10 @@ def main():
 						# 	# exit()
 						
 						# load time phase image
-						for file in os.listdir(os.path.join(working_dir,patient,stage,"nii",phase)):
-							print(stage,phase,file)
+						pbar2 = tqdm(os.listdir(os.path.join(working_dir,patient,stage,"nii",phase)))
+
+						for file in pbar2:
+							tqdm.write("Cropping: {} {} {}".format(stage,phase,file))
 							reader.SetFileName(os.path.join(working_dir,patient, stage, "nii", phase, file))
 							registerted = reader.Execute()
 
