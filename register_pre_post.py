@@ -1,20 +1,22 @@
 import SimpleITK as sitk
 import os
 import shutil
+from tqdm import tqdm
 
 def main():
-	data_dir = "./data/by_case"
-	executable = "I:/liver_tumor/binary/ExpertAutomatedRegistration.exe"
-	resample_exe = "I:/liver_tumor/binary/ResampleScalarVectorDWIVolume.exe"
+	data_dir = "Z:/data/liver/by_case"
+	executable = "D:/projects/liver_tumor/binary/ExpertAutomatedRegistration.exe"
+	resample_exe = "D:/projects/liver_tumor/binary/ResampleScalarVectorDWIVolume.exe"
 
-	selected = ["WongPunCheong"]
+	selected = ["ChungWahKitFacchetti"]
 	ignore = ["WongPunCheong"]
 	phases = ["HA","PV"]
-	# images = ["temporal_mIP.nii.gz","temporal_mIP_1-3.nii.gz","temporal_mIP_4-7.nii.gz","temporal_mIP_8-10.nii.gz","01.nii.gz"]
-	images = ["02.nii.gz","03.nii.gz","04.nii.gz","05.nii.gz","06.nii.gz","07.nii.gz","08.nii.gz","09.nii.gz","10.nii.gz"]
+	images = ["temporal_mIP.nii.gz","temporal_mIP_1-3.nii.gz","temporal_mIP_4-7.nii.gz","temporal_mIP_8-10.nii.gz","01.nii.gz","02.nii.gz","03.nii.gz","04.nii.gz","05.nii.gz","06.nii.gz","07.nii.gz","08.nii.gz","09.nii.gz","10.nii.gz"]
 
-	# for patient in selected:
-	for patient in os.listdir(data_dir):
+	pbar = tqdm(selected)
+	# pbar = tqdm(os.listdir(data_dir))
+
+	for patient in pbar:
 		if patient in ignore:
 			continue
 
@@ -22,7 +24,7 @@ def main():
 			continue
 
 		if os.path.isdir(os.path.join(data_dir, patient)):
-			print("Working on",patient)
+			pbar.set_description(patient)
 			
 			for phase in phases:
 				# clear target directory

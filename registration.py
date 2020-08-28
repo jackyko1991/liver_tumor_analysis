@@ -7,7 +7,8 @@ def main():
 	working_dir = "Z:/data/liver/by_case"
 
 	# cases = os.listdir(working_dir)
-	cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
+	# cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
+	cases = ["YauPoHing"]
 	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing","ChuKitPing"]
 
 	pbar = tqdm(cases)
@@ -19,7 +20,8 @@ def main():
 			pbar.set_description(patient)
 
 			for stage in os.listdir(os.path.join(working_dir, patient)):
-				for phase in os.listdir(os.path.join(working_dir, patient,stage, "nii_crop")):
+				# for phase in os.listdir(os.path.join(working_dir, patient,stage, "nii_crop")):
+				for phase in ["PV"]:
 					tqdm.write("{} {}".format(stage, phase))
 
 					# clear target directory
@@ -28,6 +30,8 @@ def main():
 
 					# register to plain data
 					for file in os.listdir(os.path.join(working_dir, patient,stage, "nii_crop",phase)):
+						tqdm.write("{} {} {}".format(stage, phase, file))
+
 						if file == "plain.nii.gz":
 							src = os.path.join(working_dir,patient,stage,"nii_crop",phase,"plain.nii.gz")
 							tgt = os.path.join(working_dir,patient,stage,"nii_reg",phase,"plain.nii.gz")

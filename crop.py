@@ -7,7 +7,8 @@ def main():
 
 	reader = sitk.ImageFileReader()
 	# cases = os.listdir(working_dir)
-	cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
+	# cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
+	cases = ["YauPoHing"]
 	ignore = ["ChoySimWang","HuiSiuKuenMary","KowkMenYee","LeungKwokMan","WongMukChing","ChuKitPing"]
 
 	pbar = tqdm(cases)

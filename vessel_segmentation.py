@@ -141,12 +141,13 @@ def mIP3D_old(image_path, mask_path, mip_path, label_path):
 	writer.Execute(mask_mIP)
 
 def main():
-	data_dir = "./data/by_case"
+	data_dir = "Z:/data/liver/by_case"
 	stages = ["pre","post"]
 
 	pbar = tqdm(os.listdir(data_dir))
 
 	for case in pbar:
+	# for case in ["LeungHonMan"]:
 		pbar.set_description(case)
 		plain_path = os.path.join(data_dir,case,"pre","nii_reg","HA","plain.nii.gz")
 		pre_HA_path = os.path.join(data_dir,case,"pre","nii_reg","HA","temporal_mIP.nii.gz")

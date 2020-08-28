@@ -4,17 +4,18 @@ from tqdm import tqdm
 import numpy as np
 
 def main():
-	src_dir = "./data/by_case"
+	src_dir = "Z:/data/liver/by_case"
 	tgt_filename = "temporal_mIP.nii.gz"
 
-	pbar = tqdm(os.listdir(src_dir)[16:])
+	# cases = ["ChungWahKitFacchetti","LamMoChe","SitLeongWor","TamSunnyKing","WongNaiKeung","WongWaiLun","WongYiu","YauPoHing"]
+	cases = ["YauPoHing"]
+	# cases = os.listdir(src_dir)[16:]
+
+	pbar = tqdm(cases)
 	stages = ["pre","post"]
 	phases = ["HA","PV"]
 
-	cases = ["WongKeung"]
-
-	# for case in pbar:
-	for case in cases:
+	for case in pbar:
 		pbar.set_description(case)
 		for stage in stages:
 			for phase in phases:
